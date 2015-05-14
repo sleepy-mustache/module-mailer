@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/../../../include/class.debug.php');
+require_once(dirname(__FILE__) . '/../../core/class.debug.php');
 require_once(dirname(__FILE__) . '/class.mailer.php');
 
 /**
