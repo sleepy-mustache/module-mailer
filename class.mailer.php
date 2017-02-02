@@ -93,7 +93,7 @@ class Message {
 		}
 
 		// Mail it
-		if (!mail(implode(",", $this->to), $this->subject, $this->body, $headers)) {
+		if (!mail(implode(",", $this->to), $this->subject, $this->body, $headers, "-f " . $this->from)) {
 			throw new \Exception("Mail was not sent.");
 		} else {
 			return true;
