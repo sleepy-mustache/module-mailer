@@ -19,7 +19,9 @@ Simplifies sending emails by automatically verifying email addresses and fetchin
 ~~~
 
 ## Changelog
-
+### Version 1.9 
+ * Added -f parameter to "from" address 
+ 
 ### Version 1.8
  * Added namespacing
 
