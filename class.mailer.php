@@ -20,6 +20,9 @@ namespace Module\Mailer;
  *
  * ### Changelog
  *
+ * ## Version 1.9
+ * * Added -f parameter to the "from" field
+ *
  * ## Version 1.8
  * * Added namespacing
  *
