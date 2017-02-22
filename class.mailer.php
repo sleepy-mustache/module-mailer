@@ -20,6 +20,9 @@ namespace Module\Mailer;
  *
  * ### Changelog
  *
+ * ## Version 1.10
+ * * Added Reply-To ability
+ *
  * ## Version 1.9
  * * Added -f parameter to the "from" field
  *
@@ -38,6 +41,7 @@ class Message {
 	private $to;
 	private $cc;
 	private $bcc;
+	private $replyTo;
 	private $from;
 	private $subject;
 	private $body;
@@ -95,6 +99,11 @@ class Message {
 			$headers .= 'Bcc: ' . implode(',', $this->bcc) . "\r\n";
 		}
 
+        // Add ReplyTo if it exists
+		if (isset($this->replyTo)) {
+			$headers .= 'Reply-To: ' . implode(',', $this->replyTo) . "\r\n";
+		}
+
 		// Mail it
 		if (!mail(implode(",", $this->to), $this->subject, $this->body, $headers, "-f " . $this->from)) {
 			throw new \Exception("Mail was not sent.");
@@ -115,6 +124,25 @@ class Message {
 			$e = trim($e);
 			if ($this->rfcCheck($e)) {
 				$this->to[] = $e;
+			} else {
+				throw new \Exception("The \$email parameter has a non RFC 2822 compliant addresses: {$e}");
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Adds a reply to field
+	 * @param string $email A valid email address.
+	 */
+	public function addReplyTo($email) {
+		$emails = explode(',', $email);
+
+		foreach ($emails as $e) {
+			$e = trim($e);
+			if ($this->rfcCheck($e)) {
+				$this->replyTo[] = $e;
 			} else {
 				throw new \Exception("The \$email parameter has a non RFC 2822 compliant addresses: {$e}");
 			}
