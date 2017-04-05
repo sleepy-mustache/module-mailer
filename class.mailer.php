@@ -234,17 +234,49 @@ class Message {
 	 * @param string $subject
 	 *   The subject of the email
 	 */
-	public function addSubject($subject='') {
-		if (strlen($subject) > 78) {
+	public function addSubject($subject='', $longSubject=false) {
+		if (strlen($subject) > 78 && ! $longSubject) {
 			throw new \Exception('The subject cannot be longer than 78 characters.');
-		}
+        } 
 
 		if ($subject == '') {
-			$this->subject = time();
-		} else {
-			$this->subject = $subject;
-		}
-	}
+			$subject = time();
+        } else if (strlen($subject) > 78) {
+            $subject = $this->breakEvery($subject);
+        }
+
+        $this->subject = $subject;
+    }
+
+	/**
+	 * Inserts newline character every $length characters or less between words. 
+	 * @param  string $string
+	 * @param  int    $length
+	 * @return string
+	 */
+    private function breakEvery($string, $length=78) {
+        $wordArray = explode(" ", $string);
+        $lines = array();
+        $line  = array();
+
+        foreach($wordArray as $word) {
+            if (strlen($word) > $length) {
+                throw new \Exception('Subject word longer than 78 characters');
+            }
+            $tmp = array_merge($line, array($word));
+            $lineTooLong = strlen(implode(' ', $tmp)) >= $length;
+
+            if ($lineTooLong) {
+            	array_push($lines, implode(' ', $line));
+                $line = array($word);
+            } else {
+	            $line = $tmp;
+            }
+        }
+        array_push($lines, implode(' ', $line));
+
+        return implode("\r\n", $lines);
+    }
 
 	/**
 	 * Extracts the email address from a RFC 2822 compliant string
