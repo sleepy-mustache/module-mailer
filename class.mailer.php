@@ -64,7 +64,7 @@ class Message {
 	public function send() {
 		$headers = "";
 
-		if (count($this->from) < 1) {
+		if (empty($this->from)) {
 			throw new \Exception('You forgot to addFrom();');
 		}
 
